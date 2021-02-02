@@ -1,4 +1,4 @@
-module veraison/dice
+module github.com/veraison/dice
 
 go 1.15
 
