@@ -37,12 +37,14 @@ type CompositeDeviceID struct {
 }
 
 // DiceData is the attestation data encapsulated in the DiceExtension
+// nolint: golint
 type DiceData struct {
 	Oid               asn1.ObjectIdentifier
 	CompositeDeviceID CompositeDeviceID
 }
 
 // DiceExtension is the x509 v3 extension for DICE attestation.
+// nolint: golint
 type DiceExtension struct {
 	DiceData `asn1:"tag:0,implicit,optional"`
 }
