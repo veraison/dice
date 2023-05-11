@@ -3,7 +3,8 @@
 export GO111MODULE := on
 export SHELL := /bin/bash
 
-GOPKG := github.com/veraison/dice/tcg
+GOPKG := github.com/veraison/dice/open
+GOPKG += github.com/veraison/dice/tcg
 
 GOLINT ?= golangci-lint
 
