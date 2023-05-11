@@ -1,7 +1,7 @@
 // Copyright 2021 Contributors to the Veraison project.
 // SPDX-License-Identifier: Apache-2.0
 
-package dice
+package tcg
 
 // This package implements the DICE attestation structure as defined by
 //    https://trustedcomputinggroup.org/wp-content/uploads/TCG_DICE_Attestation_Architecture_r22_02dec2020.pdf
