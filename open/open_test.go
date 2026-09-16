@@ -80,7 +80,7 @@ func Test_UnmarshalX509CdiCert(t *testing.T) {
 			Delta: func(cert *x509.Certificate) {
 				cert.AuthorityKeyId = []byte{0xde, 0xad, 0xbe, 0xef}
 			},
-			ExpectedError: "Issuer SERIALNUMBER(7a06eee41b789f4863d86b8778b1a201a6fedd56), and authorityKeyIdentifer(00000000000000000000000000000000deadbeef) do not match",
+			ExpectedError: "issuer SERIALNUMBER(7a06eee41b789f4863d86b8778b1a201a6fedd56), and authorityKeyIdentifer(00000000000000000000000000000000deadbeef) do not match",
 		},
 		{
 			Name: "IsCA false",
