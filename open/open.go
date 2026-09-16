@@ -488,7 +488,7 @@ func (o *X509CdiCert) PopulateFromX509Cert(x509Cert *x509.Certificate) error {
 	// Both must be set to UDS_ID
 	if x509Cert.Issuer.SerialNumber != fmt.Sprintf("%040x", x509Cert.AuthorityKeyId) {
 		return fmt.Errorf(
-			"Issuer SERIALNUMBER(%s), and authorityKeyIdentifer(%040x) do not match", // nolint:golint
+			"issuer SERIALNUMBER(%s), and authorityKeyIdentifer(%040x) do not match", // nolint:golint
 			x509Cert.Issuer.SerialNumber,
 			x509Cert.AuthorityKeyId,
 		)
@@ -505,14 +505,14 @@ func (o *X509CdiCert) PopulateFromX509Cert(x509Cert *x509.Certificate) error {
 	isCdiExt := func(id asn1.ObjectIdentifier) bool {
 		return id.Equal(X509CdiExtOid)
 	}
-	cdiExtIndex := slices.IndexFunc(x509Cert.UnhandledCriticalExtensions, isCdiExt)
+	cdiExtIndex := slices.IndexFunc(x509Cert.UnhandledCriticalExtensions, isCdiExt) // nolint:govet
 	if cdiExtIndex == -1 {
 		return errors.New("x509 cert does not contain CDI custom extension")
 	}
 
 	o.Certificate = *x509Cert
 
-	for _, ext := range o.Certificate.Extensions {
+	for _, ext := range o.Extensions {
 		if ext.Id.Equal(X509CdiExtOid) {
 			rest, err := asn1.Unmarshal(ext.Value, &o.X509CdiExt)
 			if err != nil {
@@ -522,8 +522,8 @@ func (o *X509CdiCert) PopulateFromX509Cert(x509Cert *x509.Certificate) error {
 				return fmt.Errorf("CDI ext error: trailing bytes")
 			}
 
-			o.Certificate.UnhandledCriticalExtensions = slices.Delete(
-				o.Certificate.UnhandledCriticalExtensions,
+			o.UnhandledCriticalExtensions = slices.Delete( // nolint:govet
+				o.UnhandledCriticalExtensions,
 				cdiExtIndex, cdiExtIndex+1,
 			)
 		}
