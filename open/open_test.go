@@ -52,14 +52,14 @@ func Test_UnmarshalX509CdiCert(t *testing.T) {
 			Delta: func(cert *x509.Certificate) {
 				cert.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageCRLSign
 			},
-			ExpectedError: "unexpected KeyUsage: 96",
+			ExpectedError: "unexpected KeyUsage: KeyUsage(96)",
 		},
 		{
 			Name: "KeyUsage None",
 			Delta: func(cert *x509.Certificate) {
 				cert.KeyUsage = 0
 			},
-			ExpectedError: "unexpected KeyUsage: 0",
+			ExpectedError: "unexpected KeyUsage: KeyUsage(0)",
 		},
 		{
 			Name: "Subject mismatch",
