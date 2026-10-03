@@ -217,7 +217,7 @@ func Test_Config(t *testing.T) {
 		},
 		{
 			Name:          "verified boot disabled",
-			Value:         append([]byte{0x16}, bytes.Repeat([]byte{0x00}, 63)...),
+			Value:         append([]byte{0x16}, make([]byte, 63)...),
 			Test:          nil,
 			ExpectedError: "VerifiedBootEnabled bit is unset, expecting the remaining verified boot bits to be unset (found 0x16)",
 		},
