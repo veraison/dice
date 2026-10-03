@@ -135,7 +135,7 @@ func (o *Entry) GetConfigDetails() (*Config, error) {
 		}
 	} else if o.ConfigurationDescriptor[0] != 0x00 { // If a verified boot system is disabled or not supported, all bits are clear.
 		return nil, fmt.Errorf(
-			"VerifiedBootEnabled bit is unset, expecting the remaining verified boot bits to be unset (found 0x%x)", // nolint:golint
+			"VerifiedBootEnabled bit is unset, expecting the remaining verified boot bits to be unset (found 0x%x)",
 			o.ConfigurationDescriptor[0],
 		)
 	}
@@ -272,6 +272,7 @@ type CborCdiCertClaims struct {
 	NotBefore      int    `cbor:"5,keyasint,omitempty" json:"nbf,omitempty"`
 	IssuedAt       int    `cbor:"6,keyasint,omitempty" json:"iat,omitempty"`
 
+	//nolint:lll
 	// Additional, OpenDICE-defined fields. See:
 	//	https://pigweed.googlesource.com/open-dice/+/HEAD/docs/specification.md#profile-design-certificate-details-cbor-cdi-certificates-additional-fields
 	CodeHash                []byte  `cbor:"-4670545,keyasint" json:"codeHash"`
@@ -478,7 +479,7 @@ func (o *X509CdiCert) PopulateFromX509Cert(x509Cert *x509.Certificate) error {
 	if x509Cert.Subject.SerialNumber != fmt.Sprintf("%040x", x509Cert.SubjectKeyId) ||
 		x509Cert.Subject.SerialNumber != fmt.Sprintf("%040x", x509Cert.SerialNumber) {
 		return fmt.Errorf(
-			"SerialNumber(%040x), Subject SERIALNUMBER(%s), and subjectKeyIdentifer(%040x) do not match", // nolint:golint
+			"SerialNumber(%040x), Subject SERIALNUMBER(%s), and subjectKeyIdentifer(%040x) do not match",
 			x509Cert.SerialNumber,
 			x509Cert.Subject.SerialNumber,
 			x509Cert.SubjectKeyId,
@@ -488,7 +489,7 @@ func (o *X509CdiCert) PopulateFromX509Cert(x509Cert *x509.Certificate) error {
 	// Both must be set to UDS_ID
 	if x509Cert.Issuer.SerialNumber != fmt.Sprintf("%040x", x509Cert.AuthorityKeyId) {
 		return fmt.Errorf(
-			"issuer SERIALNUMBER(%s), and authorityKeyIdentifer(%040x) do not match", // nolint:golint
+			"issuer SERIALNUMBER(%s), and authorityKeyIdentifer(%040x) do not match",
 			x509Cert.Issuer.SerialNumber,
 			x509Cert.AuthorityKeyId,
 		)
@@ -534,6 +535,12 @@ func (o *X509CdiCert) PopulateFromX509Cert(x509Cert *x509.Certificate) error {
 
 // GetEntry returns an Entry popluated from the X509CdiCert.
 func (o *X509CdiCert) GetEntry() *Entry {
+	// Handle oo-range values by mapping them to OdmInvalid
+	mode := OdmInvalid
+	if o.Mode >= 0 && o.Mode < asn1.Enumerated(OdmInvalid) {
+		mode = Mode(o.Mode)
+	}
+
 	return &Entry{
 		UdsID:                   o.GetUdsID(),
 		CdiID:                   o.GetCdiID(),
@@ -543,6 +550,6 @@ func (o *X509CdiCert) GetEntry() *Entry {
 		ConfigurationDescriptor: o.ConfigurationDescriptor,
 		AuthorityHash:           o.AuthorityHash,
 		AuthorityDescriptor:     o.AuthorityDescriptor,
-		Mode:                    Mode(o.Mode),
+		Mode:                    mode,
 	}
 }
